@@ -6,5 +6,5 @@ with open('/home/mogren/sync/code/mogren/rnn-gan/links.txt', 'r') as f:
      data = response.read()
      title = re.findall('<TITLE>(.*)</TITLE>')
      for t in title:
-       print t
+       print(t)
 

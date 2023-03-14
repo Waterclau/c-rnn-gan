@@ -703,7 +703,7 @@ def main(_):
   
   global_step = -1
   if os.path.exists(os.path.join(FLAGS.traindir, 'global_step.pkl')):
-    with open(os.path.join(FLAGS.traindir, 'global_step.pkl'), 'r') as f:
+    with open(os.path.join(FLAGS.traindir, 'global_step.pkl'), 'rb') as f:
       global_step = pkl.load(f)
   global_step += 1
 
@@ -806,7 +806,10 @@ def main(_):
               print(train_g_loss)
               print(train_d_loss)
           else:
-            print("Epoch: {} Pretraining loss: G: {:.3f}".format(i, train_g_loss))
+            if train_g_loss is not None:
+              print("Epoch: {} Pretraining loss: G: {:.3f}".format(i, train_g_loss))
+            else:
+              print("Epoch: {} Pretraining loss: G: None".format(i))
         else:
           train_g_loss,train_d_loss = run_epoch(session, m, loader, 'train', m.opt_d, m.opt_g, verbose=True, run_metadata=run_metadata)
           try:
