@@ -65,7 +65,7 @@ flags.DEFINE_integer("select_validation_percentage", None,
                      "Select random percentage of data as validation set.")
 flags.DEFINE_integer("select_test_percentage", None,
                      "Select random percentage of data as test set.")
-flags.DEFINE_boolean("sample", False,
+flags.DEFINE_boolean("sample",False,
                      "Sample output from the model. Assume training was already done. Save sample output to file.")
 flags.DEFINE_integer("works_per_composer", None,
                      "Limit number of works per composer that is loaded.")
@@ -900,6 +900,8 @@ def main(_):
           with open(statsfilename, 'a') as f:
             f.write('{} {} {}\n'.format(i, ' '.join(['{}'.format(stats[0][key].replace(' ', '_')) for key in stats_keys_string]), ' '.join(['{:.3f}'.format(sum([s[key] for s in stats])/float(len(stats))) for key in stats_keys])))
           print('Saved {}.'.format(filename))
+
+#aqui va lo de los test
           
         if do_exit:
           if FLAGS.call_after is not None:
@@ -910,11 +912,9 @@ def main(_):
         sys.stdout.flush()
 
 
-      test_g_loss,test_d_loss = run_epoch(session, m, loader, 'test', tf.no_op(), tf.no_op())
-      print("Test loss G: %.3f, D: %.3f" %(test_g_loss, test_d_loss))
-
+    
     song_data = sample(session, m)
-    filename = os.path.join(generated_data_dir, 'out-{}-{}-{}.mid'.format(experiment_label, i, datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')))
+    filename = os.path.join(generated_data_dir, 'out-{}-{}-{}.mid'.format(experiment_label, '0', datetime.datetime.today().strftime('%Y-%m-%d-%H-%M-%S')))
     loader.save_data(filename, song_data)
     print('Saved {}.'.format(filename))
 
@@ -923,3 +923,14 @@ def main(_):
 if __name__ == "__main__":
   tf.app.run()
 
+
+""" test_g_loss,test_d_loss = run_epoch(session, m, loader, 'test', tf.no_op(), tf.no_op())
+        print("Test loss G: %.3f, D: %.3f" %(test_g_loss, test_d_loss))
+        if not os.path.exists(os.path.join(plots_dir, 'test-input.txt')):
+          with open(os.path.join(plots_dir, 'test-input.txt'), 'w') as f:
+            f.write('# global-step learning-rate test-g-loss test-d-loss\n')
+        with open(os.path.join(plots_dir, 'test-input.txt'), 'a') as f:
+          try:
+            f.write('{} {:.4f} {:.3} {:.3f}\n'.format(i, m.lr.eval(), test_g_loss, test_d_loss))
+          except:
+            f.write('{} {} {} {}\n'.format(i, m.lr.eval(), test_g_loss, test_d_loss))"""
