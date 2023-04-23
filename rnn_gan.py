@@ -749,6 +749,10 @@ def main(_):
           vars_to_restore[v.name[:-2]] = v
       saver = tf.train.Saver(vars_to_restore)
       ckpt = tf.train.get_checkpoint_state(FLAGS.traindir)
+      print("Prueba check")
+      print(ckpt)
+      print(ckpt.model_checkpoint_path)
+      print(tf.io.gfile.exists(ckpt.model_checkpoint_path))
       if ckpt and tf.gfile.Exists(ckpt.model_checkpoint_path):
         print("Reading model parameters from %s" % ckpt.model_checkpoint_path,end=" ")
         saver.restore(session, ckpt.model_checkpoint_path)
@@ -900,6 +904,17 @@ def main(_):
           with open(statsfilename, 'a') as f:
             f.write('{} {} {}\n'.format(i, ' '.join(['{}'.format(stats[0][key].replace(' ', '_')) for key in stats_keys_string]), ' '.join(['{:.3f}'.format(sum([s[key] for s in stats])/float(len(stats))) for key in stats_keys])))
           print('Saved {}.'.format(filename))
+
+        test_g_loss,test_d_loss = run_epoch(session, m, loader, 'test', tf.no_op(), tf.no_op())
+        print("Test loss G: %.3f, D: %.3f" %(test_g_loss, test_d_loss))
+        if not os.path.exists(os.path.join(plots_dir, 'test-input.txt')):
+          with open(os.path.join(plots_dir, 'test-input.txt'), 'w') as f:
+            f.write('# global-step learning-rate test-g-loss test-d-loss\n')
+        with open(os.path.join(plots_dir, 'test-input.txt'), 'a') as f:
+          try:
+            f.write('{} {:.4f} {:.3} {:.3f}\n'.format(i, m.lr.eval(), test_g_loss, test_d_loss))
+          except:
+            f.write('{} {} {} {}\n'.format(i, m.lr.eval(), test_g_loss, test_d_loss))
 
 #aqui va lo de los test
           
