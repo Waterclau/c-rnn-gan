@@ -1,0 +1,11 @@
+Run command
+python rnn_gan.py --model "small" --datadir "data" --traindir "D:\Comillas\4º\TFG\v2\c-rnn-gan\results\model3" --select_validation_percentage "16" --select_test_percentage "20"  --bidirectional_d --learning_rate 0.1 --pretraining_epochs 8 --initialize_d "True" 
+
+Run generate 
+python generate2.py --save-dir="D:\Comillas\4º\TFG\v2\c-rnn-gan\results\model2-1\model-results" --length=500 --temperature=0.8 --seed="D:\Comillas\4º\TFG\v2\c-rnn-gan\seed" --output=generated.mid
+
+Versions
+Python 3.7.4
+python -c "import tensorflow as tf; print(tf.__version__)"
+>> 
+1.15.2
